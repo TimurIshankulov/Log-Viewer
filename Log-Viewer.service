@@ -1,0 +1,17 @@
+[Unit]
+Description=Log Viewer
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/nodejs /srv/Log-Viewer/app.js
+Restart=always
+# Specify user or 'nobody'
+User=shiny
+# Specify group name, 'nogroup' for Debian/Ubuntu or 'nobody' for RHEL/Fedora
+Group=shiny
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/srv/Log-Viewer
+
+[Install]
+WantedBy=multi-user.target
