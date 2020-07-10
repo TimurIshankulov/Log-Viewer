@@ -1,0 +1,69 @@
+<select id="app_list" onchange="changeApplication()">
+    <option value="" selected disabled hidden>Application</option>
+	{{#each app_list}}
+     <option value="{{this}}"> {{this}} </option>
+    {{/each}}
+</select>
+
+<select id="files_list" onchange="changeFile()">
+    <option value="" selected disabled hidden>Choose Log File</option>
+</select>
+
+<p id="log_content" style="white-space:pre-wrap;"></p>
+
+<script>
+
+function removeOptions(selectElement) {
+    var i, L = selectElement.options.length - 1;
+    for(i = L; i >= 0; i--) {
+        selectElement.remove(i);
+    }
+}
+
+function changeApplication() {
+    var log_files_list = getLogFiles("/getLogFiles");
+    document.getElementById("log_content").innerHTML = "";
+    
+    removeOptions(document.getElementById('files_list')); 
+    var selectElement = document.getElementById('files_list');
+    var el = document.createElement("option");
+    el.textContent = 'Choose Log File';
+    el.value = '';
+    el.selected = true;
+    el.disabled = true;
+    el.hidden = true;
+    selectElement.appendChild(el);
+
+    var select_log_file = document.getElementById("files_list");
+    for (var i = 0; i < log_files_list.length; i++) {
+        var opt = log_files_list[i];
+        var el = document.createElement("option");
+        el.textContent = opt;
+        el.value = opt;
+        select_log_file.appendChild(el);
+    }
+}
+
+function changeFile() {
+    var file_selected = document.getElementById("files_list").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'getLogContent' + '?file=' + file_selected, false);
+    xhr.send();
+    if (xhr.status != 200) {
+        alert( xhr.status + ': ' + xhr.statusText );
+    }
+    document.getElementById("log_content").innerHTML = JSON.parse(xhr.response)["file_content"];
+}
+
+function getLogFiles(url) {
+    var app_selected = document.getElementById("app_list").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url + '?app=' + app_selected, false);
+    xhr.send();
+    if (xhr.status != 200) {
+        alert( xhr.status + ': ' + xhr.statusText );
+    }
+    return JSON.parse(xhr.response)["files_list"]
+    }
+
+</script>
