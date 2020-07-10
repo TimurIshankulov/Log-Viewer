@@ -1,0 +1,4 @@
+{
+    "path": "/var/log/shiny-server/",
+    "port": 3000
+}
