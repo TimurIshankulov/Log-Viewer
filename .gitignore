@@ -1,0 +1,5 @@
+# VS Studio Code
+./.vscode
+
+# Build artifacts
+./node_modules
